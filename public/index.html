@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proxy Gateway</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --border: #1e1e2e;
+      --accent: #6c63ff;
+      --accent2: #a78bfa;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --radius: 12px;
+      --font: 'DM Mono', 'Fira Code', 'Consolas', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    /* Subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(108,99,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,99,255,.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 40px;
+      max-width: 600px;
+      width: 100%;
+      position: relative;
+      box-shadow: 0 0 80px rgba(108,99,255,.12);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      border: 1px solid rgba(167,139,250,.25);
+      border-radius: 99px;
+      padding: 4px 12px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 600;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    p.sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    input[type="url"] {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 13px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    input[type="url"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(108,99,255,.15);
+    }
+    input[type="url"]::placeholder { color: var(--muted); }
+
+    button {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      border: none;
+      padding: 12px 22px;
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity .2s, transform .1s;
+    }
+    button:hover  { opacity: .9; }
+    button:active { transform: scale(.97); }
+
+    .quick-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .quick-links span {
+      font-size: 11px;
+      color: var(--muted);
+      align-self: center;
+      margin-right: 2px;
+    }
+    .chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 4px 12px;
+      font-size: 11px;
+      color: var(--accent2);
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .chip:hover {
+      border-color: var(--accent2);
+      background: rgba(167,139,250,.08);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 28px 0;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .feature-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(108,99,255,.12);
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .feature-text .label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: .5px;
+    }
+    .feature-text .desc {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .error-msg {
+      font-size: 12px;
+      color: #f87171;
+      margin-top: 8px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="badge">◈ Proxy Gateway</div>
+  <h1>Access your sites<br><span>anywhere, seamlessly.</span></h1>
+  <p class="sub">Enter a URL below to route it through the proxy with full HTML, CSS, and JS rewriting.</p>
+
+  <div class="input-row">
+    <input type="url" id="urlInput" placeholder="https://example.com" autocomplete="off" spellcheck="false" />
+    <button onclick="navigate()">Go →</button>
+  </div>
+  <p class="error-msg" id="errMsg">Please enter a valid URL starting with https://</p>
+
+  <div class="quick-links">
+    <span>Quick:</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">⟳</div>
+      <div class="feature-text">
+        <div class="label">Full Rewriting</div>
+        <div class="desc">HTML, CSS, JS &amp; redirects</div>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-text">
+        <div class="label">Edge-Fast</div>
+        <div class="desc">Vercel serverless, 30s timeout</div>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔒</div>
+      <div class="feature-text">
+        <div class="label">Auth Passthrough</div>
+        <div class="desc">Cookies &amp; headers forwarded</div>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">◎</div>
+      <div class="feature-text">
+        <div class="label">White-Label</div>
+        <div class="desc">Origin headers stripped</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Pre-fill quick-link chips from your own sites
+  // Edit this list with your actual domains
+  const MY_SITES = [
+    // 'https://password.yourdomain.com',
+    // 'https://password.anotherdomain.io',
+  ];
+
+  const ql = document.querySelector('.quick-links');
+  MY_SITES.forEach(url => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.textContent = new URL(url).hostname;
+    chip.onclick = () => { document.getElementById('urlInput').value = url; navigate(); };
+    ql.appendChild(chip);
+  });
+  if (!MY_SITES.length) ql.style.display = 'none';
+
+  function navigate() {
+    const raw = document.getElementById('urlInput').value.trim();
+    const err = document.getElementById('errMsg');
+
+    let url = raw;
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+    try {
+      new URL(url);
+    } catch {
+      err.classList.add('show');
+      return;
+    }
+    err.classList.remove('show');
+    window.location.href = '/?url=' + encodeURIComponent(url);
+  }
+
+  document.getElementById('urlInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') navigate();
+  });
+</script>
+</body>
+</html>

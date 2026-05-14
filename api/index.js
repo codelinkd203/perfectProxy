@@ -65,14 +65,17 @@ function rewriteUrl(raw, base, pOrigin) {
   if (/^(data:|javascript:|#|mailto:|tel:|blob:)/i.test(raw)) return raw;
 
   // Already proxied — don't double-encode
-  if (raw.startsWith(pOrigin + '/?url=') || raw.startsWith('/?url=')) return raw;
+  if (
+  raw.startsWith(pOrigin + '/proxy?url=') ||
+  raw.startsWith('/proxy?url=')
+) return raw;
 
   try {
     let abs;
     if (/^https?:\/\//i.test(raw))  abs = raw;
     else if (raw.startsWith('//'))  abs = 'https:' + raw;
     else                             abs = new URL(raw, base).href;
-    return `${pOrigin}/?url=${encodeURIComponent(abs)}`;
+    return `${pOrigin}/proxy?url=${encodeURIComponent(abs)}`;
   } catch {
     return raw;
   }
@@ -187,7 +190,7 @@ function buildRuntime(base, pOrigin) {
     if(u.indexOf(PROXY+'/?url=')===0||u.indexOf('/?url=')===0)return u;
     try{
       var a=/^https?:\\/\\//i.test(u)?u:u.startsWith('//')?'https:'+u:new URL(u,BASE).href;
-      return PROXY+'/?url='+encodeURIComponent(a);
+      return PROXY+'/proxy?url='+encodeURIComponent(a);
     }catch(e){return u;}
   }
 

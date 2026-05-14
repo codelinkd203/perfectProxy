@@ -1,0 +1,15 @@
+{
+  "name": "vercel-proxy",
+  "version": "1.0.0",
+  "description": "Full-rewriting reverse proxy for your own sites on Vercel",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "devDependencies": {
+    "vercel": "^34.0.0"
+  }
+}
